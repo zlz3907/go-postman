@@ -36,20 +36,20 @@ type Message struct {
 	Content interface{} `json:"content"`
 	Type    string      `json:"type"`
 	// 可选字段
-	CC             interface{} `json:"cc,omitempty"`
-	ContentType    int         `json:"contentType,omitempty"`
-	Charset        string      `json:"charset,omitempty"`
-	Level          int         `json:"level,omitempty"`
-	Tags           []string    `json:"tags,omitempty"`
-	Attachments    []string    `json:"attachments,omitempty"`
-	References     string      `json:"references,omitempty"`
-	InReplyTo      string      `json:"inReplyTo,omitempty"`
-	SubjectID      string      `json:"subjectId,omitempty"`
-	CreateTime     int64       `json:"createTime,omitempty"`
-	LastUpdateTime int64       `json:"lastUpdateTime,omitempty"`
-	State          int         `json:"state,omitempty"`
-	Token          string      `json:"token,omitempty"`
-	FromTag        string      `json:"fromTag,omitempty"`
+	CC             interface{}   `json:"cc,omitempty"`
+	ContentType    int           `json:"contentType,omitempty"`
+	Charset        string        `json:"charset,omitempty"`
+	Level          int           `json:"level,omitempty"`
+	Tags           []string      `json:"tags,omitempty"`
+	Attachments    []interface{} `json:"attachments,omitempty"` // 修改为 []interface{}
+	References     string        `json:"references,omitempty"`
+	InReplyTo      string        `json:"inReplyTo,omitempty"`
+	SubjectID      string        `json:"subjectId,omitempty"`
+	CreateTime     int64         `json:"createTime,omitempty"`
+	LastUpdateTime int64         `json:"lastUpdateTime,omitempty"`
+	State          int           `json:"state,omitempty"`
+	Token          string        `json:"token,omitempty"`
+	FromTag        string        `json:"fromTag,omitempty"`
 }
 
 type HandlerFunc func(Message)
