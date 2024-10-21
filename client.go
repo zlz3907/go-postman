@@ -18,7 +18,7 @@ type Client struct {
 	URL            string
 	Conn           *websocket.Conn
 	Send           chan Message
-	Handlers       map[string]func(Message)
+	Handlers       map[string]HandlerFunc
 	RegisterFunc   func() Message
 	IsConnected    bool
 	reconnectMutex sync.Mutex
@@ -52,17 +52,26 @@ type Message struct {
 	FromTag        string      `json:"fromTag,omitempty"`
 }
 
-func NewClient(urlStr, clientID, authToken string) *Client {
-	return &Client{
+type HandlerFunc func(Message)
+
+func NewClient(urlStr, clientID, authToken string, handlers map[string]HandlerFunc) *Client {
+	client := &Client{
 		URL:          urlStr,
 		Send:         make(chan Message, 256),
-		Handlers:     make(map[string]func(Message)),
+		Handlers:     make(map[string]HandlerFunc),
 		IsConnected:  false,
 		AuthToken:    authToken,
 		ClientID:     clientID,
 		HeartbeatTo:  []string{},
-		HeartbeatMDB: nil, // 初始化为nil
+		HeartbeatMDB: nil,
 	}
+
+	// Initialize handlers
+	for msgType, handler := range handlers {
+		client.SetHandler(msgType, handler)
+	}
+
+	return client
 }
 
 func (c *Client) Connect() error {

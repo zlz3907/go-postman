@@ -18,7 +18,20 @@ type MDB struct {
 }
 
 func main() {
-	client := postman.NewClient("wss://socket.zhycit.com", "/service/socket/jyiai/api/001", "your-auth-token-here")
+	// 初始化handlers
+	handlers := map[string]postman.HandlerFunc{
+		"welcome": func(msg postman.Message) {
+			fmt.Printf("Received welcome message: %v\n", msg.Content)
+		},
+		"msg": func(msg postman.Message) {
+			fmt.Printf("Received message from %s: %v\n", msg.From, msg.Content)
+		},
+		"heartbeat": func(msg postman.Message) {
+			fmt.Println("Received heartbeat response from server")
+		},
+	}
+
+	client := postman.NewClient("wss://socket.zhycit.com", "/service/socket/jyiai/api/001", "your-auth-token-here", handlers)
 
 	// 设置心跳消息的广播对象
 	client.SetHeartbeatTo([]string{"server", "otherClient"})
@@ -39,18 +52,6 @@ func main() {
 			Content: "Registering client",
 			Type:    "register",
 		}
-	})
-
-	client.SetHandler("welcome", func(msg postman.Message) {
-		fmt.Printf("Received welcome message: %v\n", msg.Content)
-	})
-
-	client.SetHandler("msg", func(msg postman.Message) {
-		fmt.Printf("Received message from %s: %v\n", msg.From, msg.Content)
-	})
-
-	client.SetHandler("heartbeat", func(msg postman.Message) {
-		fmt.Println("Received heartbeat response from server")
 	})
 
 	err := client.Connect()
