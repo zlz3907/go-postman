@@ -37,7 +37,7 @@ type Message struct {
 	Type    string      `json:"type"`
 	// 可选字段
 	CC             interface{}   `json:"cc,omitempty"`
-	ContentType    int           `json:"contentType,omitempty"`
+	ContentType    string        `json:"contentType,omitempty"`
 	Charset        string        `json:"charset,omitempty"`
 	Level          int           `json:"level,omitempty"`
 	Tags           []string      `json:"tags,omitempty"`
