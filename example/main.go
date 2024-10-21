@@ -54,6 +54,18 @@ func main() {
 		}
 	})
 
+	client.SetHandler("welcome", func(msg postman.Message) {
+		fmt.Printf("Received welcome message: %v\n", msg.Content)
+	})
+
+	client.SetHandler("msg", func(msg postman.Message) {
+		fmt.Printf("Received message from %s: %v\n", msg.From, msg.Content)
+	})
+
+	client.SetHandler("heartbeat", func(msg postman.Message) {
+		fmt.Println("Received heartbeat response from server")
+	})
+
 	err := client.Connect()
 	if err != nil {
 		log.Fatal("Connection error:", err)

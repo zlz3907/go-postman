@@ -153,6 +153,8 @@ func (c *Client) readPump() {
 
 		if handler, exists := c.Handlers[msg.Type]; exists {
 			handler(msg)
+		} else if c.Handlers["default"] != nil {
+			c.Handlers["default"](msg)
 		} else {
 			log.Printf("No handler for message type: %s", msg.Type)
 		}
