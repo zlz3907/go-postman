@@ -33,8 +33,8 @@ func main() {
 
 	client.SetRegisterFunc(func() postman.Message {
 		return postman.Message{
-			From:    "example-client",
-			To:      "",
+			From:    "/service/socket/jyiai/api/001",
+			To:      "/service/socket/jyiai/gnas-sevice",
 			Subject: "Registration",
 			Content: "Registering client",
 			Type:    "register",

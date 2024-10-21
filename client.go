@@ -3,6 +3,7 @@ package postman
 import (
 	"crypto/tls"
 	"encoding/json"
+
 	// "fmt"
 	"log"
 	"net/http"
@@ -24,7 +25,7 @@ type Client struct {
 	AuthToken      string
 	ClientID       string
 	HeartbeatTo    []string
-	HeartbeatMDB   interface{} // 新增：用于存储MDB数据
+	HeartbeatMDB   interface{}  // 新增：用于存储MDB数据
 	heartbeatMu    sync.RWMutex // 新增：用于保护HeartbeatMDB的并发访问
 }
 
@@ -53,13 +54,13 @@ type Message struct {
 
 func NewClient(urlStr, clientID, authToken string) *Client {
 	return &Client{
-		URL:         urlStr,
-		Send:        make(chan Message, 256),
-		Handlers:    make(map[string]func(Message)),
-		IsConnected: false,
-		AuthToken:   authToken,
-		ClientID:    clientID,
-		HeartbeatTo: []string{},
+		URL:          urlStr,
+		Send:         make(chan Message, 256),
+		Handlers:     make(map[string]func(Message)),
+		IsConnected:  false,
+		AuthToken:    authToken,
+		ClientID:     clientID,
+		HeartbeatTo:  []string{},
 		HeartbeatMDB: nil, // 初始化为nil
 	}
 }
@@ -141,11 +142,6 @@ func (c *Client) readPump() {
 			continue
 		}
 
-		if msg.Type == "heartbeat" {
-			log.Println("Received heartbeat response")
-			continue
-		}
-
 		if handler, exists := c.Handlers[msg.Type]; exists {
 			handler(msg)
 		} else {
@@ -189,7 +185,7 @@ func (c *Client) writePump() {
 				Content: c.GetHeartbeatMDB(), // 使用MDB数据作为心跳内容
 				Type:    "heartbeat",
 			}
-			
+
 			jsonHeartbeat, err := json.Marshal(heartbeat)
 			if err != nil {
 				log.Printf("Heartbeat JSON marshal error: %v", err)
@@ -201,7 +197,7 @@ func (c *Client) writePump() {
 				log.Printf("Heartbeat write error: %v", err)
 				return
 			}
-			
+
 			log.Println("Heartbeat sent")
 		}
 	}
